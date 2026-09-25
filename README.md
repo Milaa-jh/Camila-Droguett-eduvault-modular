@@ -178,7 +178,50 @@ eduvault-modular/
 4. En Supabase, ve a **Authentication → URL Configuration** y agrega la URL de tu deploy de Vercel (ej. `https://tu-proyecto.vercel.app`) tanto en "Site URL" como en "Redirect URLs" (necesario para que funcionen los enlaces de confirmación de correo y recuperación de contraseña en producción).
 5. Deploy.
 
-## 8. Ideas para después del MVP
+## 8. Diagrama de Arquitectura
+```mermaid
+flowchart TB
+    User(["👤 Estudiante"])
+
+    subgraph Client["CAPA CLIENTE — Navegador"]
+        Browser["Interfaz Web<br/>React + Tailwind CSS<br/>(páginas, componentes, formularios)"]
+    end
+
+    subgraph Vercel["CAPA DE APLICACIÓN — Vercel (Hosting Serverless)"]
+        direction TB
+        Middleware["Middleware<br/>(protección de rutas privadas)"]
+        NextApp["Next.js App Router<br/>Server Components + Route Handlers<br/>(lógica de páginas y navegación)"]
+        Middleware --> NextApp
+    end
+
+    subgraph Supabase["CAPA DE SERVICIOS — Supabase (Backend as a Service)"]
+        direction TB
+        Auth["Supabase Auth<br/>Registro · Login · Sesiones · Recuperar contraseña"]
+        DB[("PostgreSQL<br/>9 tablas relacionales<br/>profiles · subjects · units · materials<br/>summaries · tests · questions · options · test_attempts")]
+        RLS{{"Row Level Security (RLS)<br/>Cada usuario solo accede a sus propios datos"}}
+        Storage["Supabase Storage<br/>Bucket 'materials' (privado)<br/>Bucket 'avatars' (público)"]
+        DB --- RLS
+    end
+
+    User -->|"interactúa"| Browser
+    Browser -->|"HTTPS"| Middleware
+    NextApp -->|"Cliente Supabase<br/>(@supabase/supabase-js)"| Auth
+    NextApp -->|"Consultas SQL<br/>vía API autogenerada"| DB
+    NextApp -->|"Subida / descarga<br/>de archivos"| Storage
+    Auth -.->|"valida sesión"| RLS
+
+    classDef client fill:#eef4ff,stroke:#3466ff,stroke-width:2px,color:#1e293b
+    classDef app fill:#fff7ed,stroke:#f59e0b,stroke-width:2px,color:#1e293b
+    classDef service fill:#ecfdf5,stroke:#22c55e,stroke-width:2px,color:#1e293b
+    classDef user fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#1e293b
+
+    class Browser client
+    class Middleware,NextApp app
+    class Auth,DB,RLS,Storage service
+    class User user
+```
+
+## 9. Ideas para después del MVP
 
 El MVP cubre el flujo completo descrito en el prompt maestro. Algunas mejoras posibles para
 una siguiente iteración (fuera del alcance original):
