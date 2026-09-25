@@ -183,18 +183,18 @@ eduvault-modular/
 flowchart TB
     User(["👤 Estudiante"])
 
-    subgraph Client["CAPA CLIENTE — Navegador"]
+    subgraph Client["CLIENTE — Navegador"]
         Browser["Interfaz Web<br/>React + Tailwind CSS<br/>(páginas, componentes, formularios)"]
     end
 
-    subgraph Vercel["CAPA DE APLICACIÓN — Vercel (Hosting Serverless)"]
+    subgraph Vercel["APLICACIÓN — Vercel (Hosting Serverless)"]
         direction TB
         Middleware["Middleware<br/>(protección de rutas privadas)"]
         NextApp["Next.js App Router<br/>Server Components + Route Handlers<br/>(lógica de páginas y navegación)"]
         Middleware --> NextApp
     end
 
-    subgraph Supabase["CAPA DE SERVICIOS — Supabase (Backend as a Service)"]
+    subgraph Supabase["SERVICIOS — Supabase (Backend as a Service)"]
         direction TB
         Auth["Supabase Auth<br/>Registro · Login · Sesiones · Recuperar contraseña"]
         DB[("PostgreSQL<br/>9 tablas relacionales<br/>profiles · subjects · units · materials<br/>summaries · tests · questions · options · test_attempts")]
