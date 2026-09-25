@@ -194,7 +194,7 @@ flowchart TB
         Middleware --> NextApp
     end
 
-    subgraph Supabase["SERVICIOS — Supabase (Backend as a Service)"]
+    subgraph Supabase["SERVICIOS — Supabase (Backend / Service)"]
         direction TB
         Auth["Supabase Auth<br/>Registro · Login · Sesiones · Recuperar contraseña"]
         DB[("PostgreSQL<br/>9 tablas relacionales<br/>profiles · subjects · units · materials<br/>summaries · tests · questions · options · test_attempts")]
